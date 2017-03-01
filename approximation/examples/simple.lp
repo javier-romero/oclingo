@@ -1,5 +1,5 @@
-%query :- a, b.
-%query :- a, not b.
+query :- a, b.
+query :- a, not b.
 
 %query :- not a.
 
@@ -10,7 +10,7 @@
 %{ x }.
 %#show x/0.
 
-{c} :- b. #show c/0. query.
+%{c} :- b. #show c/0. query.
 
 %
 % exists and forall
