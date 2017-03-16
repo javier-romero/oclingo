@@ -12,18 +12,21 @@ Use ``--opt-mode=optN --quiet=1`` to compute all approximations.
 ## Input
 The input program cannot have disjunctions or nonmonotone aggregates.
 
-There are some special predicates: exists/1, forall/1, holds/1, and query/0.
-They are not shown at the output.
+There are some special predicates: 
+- ``exists/1``: domain predicate, defines the existentially quantified variables
+- ``forall/1``: domain predicate, defines the universally quantified variables
+- ``query/0``: must be proved true by the approximation
+- ``holds/1``: should not appear in the input program
+
+The special predicates are not shown at the output.
 For printing them, one can write something like this:
 ```
 #show (query) : query.
 ```
 
-Variables existentially quantified must be defined by (domain) predicate exists/1.
-
-Variables universally quantified must be defined by (domain) predicate forall/1.
-
-If exists(X) or forall(X) is true, then X may not appear in a rule head, and a rule with the form ``X :- holds(X).``
+If ``exists(X)`` or ``forall(X)`` is true, 
+then ``X`` may not appear in a rule head, 
+and a rule with the form ``X :- holds(X).``
 must be part of the input program.
 
 
