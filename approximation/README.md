@@ -30,6 +30,20 @@ must be part of the input program.
 
 ## Example
 ```
+$ cat examples/simple.lp 
+query :- a, b.
+query :- a, not b.
+
+#show a/0. #show b/0.
+
+% exists and forall
+exists(a).
+forall(b).
+
+% mapping 
+a :- holds(a).
+b :- holds(b).
+
 $ clingo examples/simple.lp extra.lp --output=reify --reify-sccs | clingo - -Wno-atom-undefined meta.lp metaFalse.lp
 clingo version 5.1.0
 Reading from - ...
