@@ -9,6 +9,20 @@ where META is either `metaFalse.lp` or `metaPoss.lp`.
 
 Use ``--opt-mode=optN --quiet=1`` to compute all approximations.
 
+## Input
+The input program cannot have disjunctions or nonmonotone aggregates.
+
+There are some special predicates: exists/1, forall/1, holds/1, and query/0
+Special predicates are not shown at the output.
+Variables existentially quantified must be defined by (domain) predicate exists/1.
+
+Variables universally quantified must be defined by (domain) predicate forall/1.
+
+If exists(X) or forall(X) is true, then X may not appear in a rule head, and a rule with the for ``X :- holds(X).``
+mut be part of the input program.
+
+
+
 ## Example
 ```
 $ clingo examples/simple.lp extra.lp --output=reify --reify-sccs | clingo - -Wno-atom-undefined meta.lp metaFalse.lp
