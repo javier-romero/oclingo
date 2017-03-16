@@ -11,12 +11,12 @@ Use ``--opt-mode=optN --quiet=1`` to compute all approximations.
 
 ## Example
 ```
-$ clingo examples/simple.lp extra.lp --output=reify --reify-sccs | clingo - -Wno-atom-undefined meta.lp metaFalse.lp 
+$ clingo examples/simple.lp extra.lp --output=reify --reify-sccs | clingo - -Wno-atom-undefined meta.lp metaFalse.lp
 clingo version 5.1.0
 Reading from - ...
 Solving...
 Answer: 1
-a assume(false(b))
+b a assume(true(b))
 Optimization: 1
 OPTIMUM FOUND
 ```
