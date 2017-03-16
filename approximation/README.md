@@ -21,7 +21,7 @@ There are some special predicates:
 The special predicates are not shown at the output.
 For printing them, one can write something like this:
 ```
-#show (query) : query.
+#show _query : query.
 ```
 
 If ``exists(X)`` or ``forall(X)`` is true, 
