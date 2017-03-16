@@ -9,9 +9,9 @@ where META is either `metaFalse.lp` or `metaPoss.lp`.
 
 Use ``--opt-mode=optN --quiet=1`` to compute all approximations.
 
-The system returns an approximation of the input program satisfying atom ``query``.
+The system returns an approximation of the input program proving atom ``query``.
 
-The constraints of the input program must not be proved true, 
+The constraints of the input program cannot be proved true, 
 but they are not required to be proved false.
 
 ## Input
