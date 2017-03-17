@@ -31,7 +31,7 @@ There are some special predicates:
 - ``exists/1``: domain predicate, defines the existentially quantified atoms
 - ``forall/1``: domain predicate, defines the universally quantified atoms
 - ``knowledge/1``: domain predicate, defines the atoms ``A`` for which ``kw(A)`` appears in the input program 
-- ``holds/1``, ``flag/0``, ``kw/2``, ``query/0``: used internally, should not appear in the input program
+- ``holds/1``, ``flag/0``, ``kw/2``, ``query/1``: used internally, should not appear in the input program
 
 The special predicates are not shown at the output (even when ``#show``n).
 For printing them, one can write something like this:
