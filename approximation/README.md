@@ -2,17 +2,25 @@
 Approximating conformant problems with ASP
 
 ## Usage
+Either 
 ```bash
-$ clingo [files] extra.lp --output=reify --reify-sccs | clingo - -Wno-atom-undefined meta.lp META
+$ clingo [files] extra.lp --output=reify --reify-sccs | clingo - -Wno-atom-undefined meta.lp metaFalse.lp
 ```
-where META is either `metaFalse.lp` or `metaPoss.lp`.
+or
+```bash
+$ clingo [files] extra.lp --output=reify | clingo - -Wno-atom-undefined meta.lp metaPoss.lp
+```
 
 Use ``--opt-mode=optN --quiet=1`` to compute all approximations.
 
 The system returns an approximation of the input program proving atom ``query``.
+To avoid the need to prove this atom, add ``-c _query=0`` at the end of the call.
 
-The constraints of the input program cannot be proved true, 
-but they are not required to be proved false.
+The constraints of the input program cannot be proved true.
+To require them also to be proved false, add ``-c _constraints=1`` at the end of the call.
+
+The system minimizes the assumptions on the universally quantified atoms.
+To avoid the use of assumptions, add ``-c _assumptions=0`` at the end of the call.
 
 ## Input
 The input program cannot have disjunctions or nonmonotone aggregates.
