@@ -50,19 +50,20 @@ and a rule with the form ``holds(A) :- A.``
 must be part of the input program.
 
 
-## Example (TO BE REFINED)
+## Example 
 ```
 $ cat examples/simple.lp 
+% PROGRAM 
 query :- a, b.
 query :- a, not b.
 
 #show a/0. #show b/0.
 
-% exists and forall
+% EXISTS, FORALL, KNOWLEDGE
 exists(a).
 forall(b).
 
-% mapping 
+% HOLDS
 a :- holds(a).
 b :- holds(b).
 
@@ -73,5 +74,40 @@ Solving...
 Answer: 1
 b a assume(true(b))
 Optimization: 1
+OPTIMUM FOUND
+
+$ cat examples/sense.lp 
+% PROGRAM
+:- not 1 { sense; a } 1.
+x :- not u.
+x :-     u.
+:- not sense, not kw(x).
+:-     sense,     kw(x).
+query.
+
+#show sense/0. #show a/0.
+
+% EXISTS, FORALL, KNOWLEDGE
+exists(sense).
+exists(a).
+forall(u).
+knowledge(x).
+
+% HOLDS
+sense :- holds(sense).
+a     :- holds(a).
+u     :- holds(u).
+holds(x) :- x.
+
+$ clingo examples/sense.lp extra.lp --output=reify | clingo - -Wno-atom-undefined meta.lp metaPoss.lp
+clingo version 5.1.0
+Reading from - ...
+Solving...
+Answer: 1
+a assume(false(u))
+Optimization: 1
+Answer: 2
+sense
+Optimization: 0
 OPTIMUM FOUND
 ```
