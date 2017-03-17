@@ -18,8 +18,7 @@ fail(atom(A)) :- atom(A), not supp(A).
 % guess exists/1
 1 { true(atom(A)) ; fail(atom(A)) } 1 :- quant(exists,_,A).
 
-% guess as few as possible forall/1
-#const _assumptions=1.
+% guess as few as possible forall/1 (with _assumptions=1)
 { assume(A) } :- quant(forall,_,A),                 _assumptions=1.
 #minimize { 1,A: assume(A),                         _assumptions=1}.
 1 { true(atom(A)) ; fail(atom(A)) } 1 :- assume(A), _assumptions=1.
@@ -28,7 +27,7 @@ fail(atom(A)) :- atom(A), not supp(A).
 1 { true(atom(A)); fail(atom(A)) } 1 :-
                  choice_supp(A,B), true(B).
 true(atom(A)) :- choice_supp(A,B), true(B),
-                 not fail(BB), supp(A,BB), not choice_supp(A,BB).
+                 supp(A,BB), not choice_supp(A,BB), not fail(BB).
 
 % fitting operator
 true(normal(B)) :- literal_tuple(B),
@@ -46,11 +45,12 @@ fail(sum(B,G)) :- sum(B,G,T),
 
               :- rule(disjunction(H),B), true(B), not atom_tuple(H,_).
 true(atom(A)) :- rule(disjunction(H),B), true(B),     atom_tuple(H,A).
-fail(atom(A)) :- supp(A), fail(B) : supp(A,B), not choice_supp(A,B);
-                      not true(B) :                choice_supp(A,B).
+fail(atom(A)) :- supp(A), not quant(_,_,A), not knowledge(A),
+                 fail(B) : supp(A,B), not choice_supp(A,B);
+                 not true(B) :            choice_supp(A,B).
 
-% uncomment to forbid unknown constraints
-%              :- rule(disjunction(H),B), not fail(B), not atom_tuple(H,_).
+% forbid possible constraints (with _constraints=1)
+:- rule(disjunction(H),B), not fail(B), not atom_tuple(H,_), _constraints=1.
 
 % extension to well-founded
 internal(C,normal(B)) :- scc(C,A), supp(A,normal(B)), scc(C,A'), literal_tuple(B,A').
@@ -68,6 +68,13 @@ wait(C,sum(B,G),I)  :- internal(C,sum(B,G)), steps(C,Z), I = 0..Z-1, sum(B,G,T),
            W,L : wait(C,atom(L),I), weighted_literal_tuple(B, L,W), L > 0,     scc(C,L) ;
            W,L :   true(atom(L)),   weighted_literal_tuple(B,-L,W), L > 0               } >= T-G+1.
 wait(C,atom(A),I)   :- wait(C,atom(A),0), steps(C,Z), I = 1..Z, wait(C,B,I-1) : supp(A,B), internal(C,B).
-
 fail(atom(A)) :- scc(C,A), wait(C,atom(A),Z), steps(C,Z).
+
+
+%
+% Knowledge
+%
+true(atom(X)) :- true(atom(Y)), knowledge(true, X,Y).
+true(atom(X)) :- fail(atom(Y)), knowledge(false,X,Y).
+fail(atom(X)) :- knowledge(X),     not true(atom(X)).
 

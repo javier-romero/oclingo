@@ -1,23 +1,10 @@
 %
-% Requirements:
-% * No disjunctions
-% * Special predicates: exists/1, forall/1, holds/1, query/0
-% * exists/1 and forall/1 are domain predicates
-% * if exists(X) or forall(X) is true, then
-%   - X does not appear in any head, and
-%   - a rule 
-%       X :- holds(X).
-%     is given.
-%
-% Special predicates are not shown.
-%
-
-%
 % Constants
 %
 
 #const _assumptions=1. % 1 = assumptions are activated
 #const _constraints=0. % 1 = constraints are required to be proved false
+#const _query=1.       % 1 = query atom   is required to be proved true
 
 %
 % Deterministic Part
@@ -50,28 +37,31 @@ rule(disjunction(flag),normal(flag)).
 atom_tuple(flag,A) :- output(flag,B), literal_tuple(B,A).
 
 % knowledge
-knowledge(A,AA) :- output(kw(K),B),     literal_tuple(B,A),
-                   output(holds(K),BB), literal_tuple(BB,AA).
-knowledge(A)    :- knowledge(A,AA).
+knowledge(true, A,AA) :- output(tkw(K),B),    literal_tuple(B,A),
+                         output(holds(K),BB), literal_tuple(BB,AA).
+knowledge(false,A,AA) :- output(fkw(K),B),    literal_tuple(B,A),
+                         output(holds(K),BB), literal_tuple(BB,AA).
+knowledge(A)    :- knowledge(_,A,AA).
 
 %
 % Nondeterministic Part
 %
 
 % query must be known true
-:- output(query,B), not true(normal(B)).
+:- output(query,B), not true(normal(B)), _query=1.
 
 
 %
 % Display
 %
 
-hide(holds(X))  :- output(holds(X),_).
-hide(flag)      :- output(flag,_).
-hide(exists(E)) :- output(exists(E),_).
-hide(forall(A)) :- output(forall(A),_).
-hide(kw(X))     :- output(kw(X),_).
-hide(query)     :- output(query,_).
+hide(holds(X))     :- output(holds(X),_).
+hide(flag)         :- output(flag,_).
+hide(exists(E))    :- output(exists(E),_).
+hide(forall(A))    :- output(forall(A),_).
+hide(kw(X))        :- output(kw(X),_).
+hide(knowledge(X)) :- output(knowledge(X),_).
+hide(query)        :- output(query,_).
 
 #show.
 #show T : output(T,B), true(normal(B)), not hide(T),                  not error(_,_).
