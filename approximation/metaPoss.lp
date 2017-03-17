@@ -17,8 +17,7 @@ true(atom(A)) :- fact(A).
 % guess exists/1
 { true(atom(A)) } :- quant(exists,_,A).
 
-% guess as few as possible forall/1
-#const _assumptions=1.
+% guess as few as possible forall/1 (with _assumptions=1)
 { assume(A) } :- quant(forall,_,A), _assumptions=1.
 #minimize { 1,A: assume(A),         _assumptions=1}.
 { true(atom(A)) } :- assume(A),     _assumptions=1.
@@ -49,13 +48,21 @@ poss(sum(B,G)) :- sum(B,G,T),
     #sum { W,L : poss(atom(L)), weighted_literal_tuple(B, L,W), L > 0 ;
            W,L : not true(atom(L)), weighted_literal_tuple(B,-L,W), L > 0 } >= G.
 
-% constraints, with true and possible heads
+% constraints, true atoms, and possible atoms
               :- rule(disjunction(H),B), true(B), not atom_tuple(H,_).
 true(atom(A)) :- rule(disjunction(H),B), true(B),     atom_tuple(H,A).
 poss(atom(A)) :- rule(disjunction(H),B), poss(B),     atom_tuple(H,A).
 
-% uncomment to forbid possible constraints
-% :- rule(disjunction(H),B), poss(B), not atom_tuple(H,_).
+% forbid possible constraints (with _constraints=1)
+:- rule(disjunction(H),B), poss(B), not atom_tuple(H,_), _constraints=1.
+
+
+%
+% Knowledge
+%
+true(atom(X)) :-     true(atom(Y)), knowledge(X,Y).
+true(atom(X)) :- not poss(atom(Y)), knowledge(X,Y).
+
 
 %
 % Display

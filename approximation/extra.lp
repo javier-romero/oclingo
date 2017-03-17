@@ -1,10 +1,14 @@
 % GENERATE
-{ holds(X) : exists(X) }.
-{ holds(X) : forall(X) }.
+{ holds(X) :    exists(X) } :- not flag.
+{ holds(X) :    forall(X) } :- not flag.
+{    kw(X) : knowledge(X) } :- not flag.
+{ flag }.
 
 % DISPLAY
 #show holds/1.
-#show forall/1.
+#show flag/0.
 #show exists/1.
+#show forall/1.
+#show kw/1.
 #show query/0.
 

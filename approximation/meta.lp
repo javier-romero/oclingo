@@ -12,6 +12,12 @@
 % Special predicates are not shown.
 %
 
+%
+% Constants
+%
+
+#const _assumptions=1. % 1 = assumptions are activated
+#const _constraints=0. % 1 = constraints are required to be proved false
 
 %
 % Deterministic Part
@@ -37,8 +43,17 @@ quant(exists,E,A) :- output(exists(E),_), output(holds(E),B), literal_tuple(B,A)
 quant(forall,F,A) :- output(forall(F),_), output(holds(F),B), literal_tuple(B,A).
 
 % the choice support of A is B
-choice_supp(A,B)  :- rule(choice(H),B), atom_tuple(H,A),
-                     not quant(_,_,A).
+choice_supp(A,B)  :- rule(choice(H),B), atom_tuple(H,A).
+
+% add fact "flag." reified
+rule(disjunction(flag),normal(flag)).
+atom_tuple(flag,A) :- output(flag,B), literal_tuple(B,A).
+
+% knowledge
+knowledge(A,AA) :- output(kw(K),B),     literal_tuple(B,A),
+                   output(holds(K),BB), literal_tuple(BB,AA).
+knowledge(A)    :- knowledge(A,AA).
+
 %
 % Nondeterministic Part
 %
@@ -51,13 +66,12 @@ choice_supp(A,B)  :- rule(choice(H),B), atom_tuple(H,A),
 % Display
 %
 
-hide(_criteria(J,W,Q)) :- output(_criteria(J,W,Q),_).
-hide(_query)           :- output(_query,_).
-hide(_optimize(J,W,Q)) :- output(_optimize(J,W,Q),_).
-hide(exists(E))        :- output(exists(E),_).
-hide(forall(A))        :- output(forall(A),_).
-hide(holds(X))         :- output(holds(X),_).
-hide(query).
+hide(holds(X))  :- output(holds(X),_).
+hide(flag)      :- output(flag,_).
+hide(exists(E)) :- output(exists(E),_).
+hide(forall(A)) :- output(forall(A),_).
+hide(kw(X))     :- output(kw(X),_).
+hide(query)     :- output(query,_).
 
 #show.
 #show T : output(T,B), true(normal(B)), not hide(T),                  not error(_,_).
@@ -65,5 +79,5 @@ hide(query).
 #show assume(false(N)) : quant(forall,N,A), assume(A), fail(atom(A)), not error(_,_).
 
 #show error/2.
-error((twice,Q),Name) :-  quant(Q,Name,A), quant(Q,Name,A2), A > A2.
-
+error((twice,Q),Name) :- quant(Q,Name,A), quant(Q,Name,A2), A > A2.
+error((scc,Q),Name)   :- scc(C,A), exists(Q,Name,A).
