@@ -23,7 +23,7 @@ There are some special predicates:
 - ``query/0``: must be proved true by the approximation
 - ``holds/1``: should not appear in the input program
 
-The special predicates are not shown at the output.
+The special predicates are not shown at the output (even when ``#show``n).
 For printing them, one can write something like this:
 ```
 #show _query : query.
