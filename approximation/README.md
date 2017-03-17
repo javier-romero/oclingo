@@ -1,8 +1,8 @@
 # approximation
-Approximating conformant problems with ASP
+Approximating problems with incomplete information in ASP
 
 ## Usage
-Either 
+Run either 
 ```bash
 $ clingo [files] extra.lp --output=reify --reify-sccs | clingo - -Wno-atom-undefined meta.lp metaFalse.lp
 ```
@@ -25,26 +25,32 @@ To avoid the use of assumptions, add ``-c _assumptions=0`` at the end of the cal
 ## Input
 The input program cannot have disjunctions or nonmonotone aggregates.
 
+Atoms of the form ``kw(A)`` represent knowing whether ``A`` holds.
+
 There are some special predicates: 
-- ``exists/1``: domain predicate, defines the existentially quantified variables
-- ``forall/1``: domain predicate, defines the universally quantified variables
-- ``query/0``: must be proved true by the approximation
-- ``holds/1``: should not appear in the input program
+- ``exists/1``: domain predicate, defines the existentially quantified atoms
+- ``forall/1``: domain predicate, defines the universally quantified atoms
+- ``knowledge/1``: domain predicate, defines the atoms ``A`` for which ``kw(A)`` appears in the input program 
+- ``holds/1``, ``flag/0``, ``kw/2``: used internally, should not appear in the input program
 
 The special predicates are not shown at the output (even when ``#show``n).
 For printing them, one can write something like this:
 ```
-#show _query : query.
+#show _holds(X) : holds(X).
 ```
 
-If ``exists(X)`` or ``forall(X)`` is true, 
-then ``X`` may not appear in a rule head, 
-and a rule with the form ``X :- holds(X).``
+If ``exists(A)`` or ``forall(A)`` is true, 
+then ``A`` may not appear in a rule head, 
+and a rule with the form ``A :- holds(A).``
+must be part of the input program.
+
+If ``kw(A)`` appears in the input program, 
+then ``knowledge(A)`` must be defined, 
+and a rule with the form ``holds(A) :- A.``
 must be part of the input program.
 
 
-
-## Example
+## Example (TO BE REFINED)
 ```
 $ cat examples/simple.lp 
 query :- a, b.
