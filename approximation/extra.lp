@@ -16,6 +16,7 @@ kw(X) :- not holds(X), kw(false,X).
 
 % QUERY
 query(0) :- query.
+query    :- not flag.
 
 % DISPLAY
 #show holds/1.
@@ -25,3 +26,7 @@ query(0) :- query.
 #show kw/2.
 #show query/1.
 
+% AVOID WARNINGS
+exists(X) :- exists(X).
+forall(X) :- forall(X).
+knowledge(X) :- knowledge(X).
