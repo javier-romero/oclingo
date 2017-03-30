@@ -14,7 +14,7 @@ action(wait).
 
 % INITIAL SITUATION
 h(at(1),0).
-h(clean(R),0) :- not nh(clean(R),0), room(R).
+nh(clean(R),0) :- not h(clean(R),0), room(R).
 
 % GENERATE ACTIONS
 % { occ(A,T) } :- action(A), time(T).
@@ -37,10 +37,10 @@ nh(F,T) :- nh(F,T-1), not  h(F,T), time(T).
 :- occ(A,T), not poss(A,T).
 poss(brush,T) :- time(T).
 poss(wait,T) :- time(T).
-poss(go(R),T) :- h(at(RR),T-1), door((RR,R)), time(T).
+poss(go(R2),T) :- h(at(R1),T-1), door((R1,R2)), time(T).
 
 % GOAL
-goal :- time(T), h(clean(R),T) : room(R).
+goal :- T=0..t, h(clean(R),T) : room(R).
 :- not goal.
 
 % DISPLAY
@@ -48,11 +48,9 @@ goal :- time(T), h(clean(R),T) : room(R).
 
 % EXISTS, FORALL and KNOWLEDGE
 exists(occ(A,T)) :- action(A), time(T).
-%{ occ(A,T) : exists(occ(A,T)) }.
-
-forall(nh(clean(R),0)) :- room(R).
+forall(h(clean(R),0)) :- room(R).
 
 % HOLDS
 occ(A,T) :- holds(occ(A,T)).
-nh(clean(R),0) :- holds(nh(clean(R),0)).
+h(clean(R),0) :- holds(h(clean(R),0)).
 
