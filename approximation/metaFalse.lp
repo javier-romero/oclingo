@@ -74,7 +74,8 @@ fail(atom(A)) :- scc(C,A), wait(C,atom(A),Z), steps(C,Z).
 %
 % Knowledge
 %
-true(atom(X)) :- true(atom(Y)), knowledge(true, X,Y).
-true(atom(X)) :- fail(atom(Y)), knowledge(false,X,Y).
-fail(atom(X)) :- knowledge(X),     not true(atom(X)).
+true(atom(A)) :- knowledge(true, A,B), true(atom(L)) : literal_tuple(B,L).
+true(atom(A)) :- knowledge(false,A,B), fail(atom(L)) , literal_tuple(B,L).
+true(atom(A)) :- knowledge(false,A,o). 
+fail(atom(A)) :- knowledge(A),     not true(atom(A)).
 

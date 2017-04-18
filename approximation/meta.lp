@@ -3,8 +3,8 @@
 %
 
 #const _assumptions=1. % 1 = assumptions are activated
-#const _constraints=0. % 1 = constraints are required to be proved false
-#const _query=1.       % 1 = query atom   is required to be proved true
+#const _constraints=1. % 1 = constraints are required to be proved false
+#const _query=0.       % 1 = query atom   is required to be proved true
 
 
 %
@@ -38,11 +38,13 @@ rule(disjunction(flag),normal(flag)).
 atom_tuple(flag,A) :- output(flag,B), literal_tuple(B,A).
 
 % knowledge
-knowledge(true, A,AA) :- output(kw(true, K),B), literal_tuple(B,A),
-                         output(holds(K),BB), literal_tuple(BB,AA).
-knowledge(false,A,AA) :- output(kw(false,K),B), literal_tuple(B,A),
-                         output(holds(K),BB), literal_tuple(BB,AA).
-knowledge(A)    :- knowledge(_,A,AA).
+knowledge(true, A,B) :- output(kt(K),KB), literal_tuple(KB,A),
+                        output(holds(K),B).
+knowledge(false,A,B) :- output(kf(K),KB), literal_tuple(KB,A),
+                        output(holds(K),B).
+knowledge(false,A,o) :- output(kf(K),KB), literal_tuple(KB,A),
+                        not output(holds(K),_).
+knowledge(A)         :- knowledge(_,A,_).
 
 
 %
@@ -61,7 +63,8 @@ hide(holds(X))     :- output(holds(X),_).
 hide(flag)         :- output(flag,_).
 hide(exists(E))    :- output(exists(E),_).
 hide(forall(A))    :- output(forall(A),_).
-hide(kw(X,Y))      :- output(kw(X,Y),_).
+hide(kt(X))        :- output(kt(X),_).
+hide(kf(X))        :- output(kf(X),_).
 hide(knowledge(X)) :- output(knowledge(X),_).
 hide(query(0))     :- output(query(0),_).
 
@@ -74,4 +77,4 @@ hide(query(0))     :- output(query(0),_).
 error((twice,Q),Name)    :- quant(Q,Name,A), quant(Q,Name,A2), A > A2.
 error((scc,Q),Name)      :- scc(C,A), quant(Q,Name,A).
 error((scc,knowledge),A) :- scc(C,A), knowledge(A).
-
+error(output,O)          :- output(O,B), 2 { literal_tuple(B,L) }.

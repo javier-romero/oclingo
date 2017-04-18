@@ -60,8 +60,9 @@ poss(atom(A)) :- rule(disjunction(H),B), poss(B),     atom_tuple(H,A).
 %
 % Knowledge
 %
-true(atom(X)) :-     true(atom(Y)), knowledge(true, X,Y).
-true(atom(X)) :- not poss(atom(Y)), knowledge(false,X,Y).
+true(atom(A)) :- knowledge(true, A,B),     true(atom(L)) : literal_tuple(B,L).
+true(atom(A)) :- knowledge(false,A,B), not poss(atom(L)) , literal_tuple(B,L).
+true(atom(A)) :- knowledge(false,A,o).
 
 
 %
