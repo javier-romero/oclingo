@@ -49,25 +49,22 @@ poss(sum(B,G)) :- sum(B,G,T),
            W,L : not true(atom(L)), weighted_literal_tuple(B,-L,W), L > 0 } >= G.
 
 % constraints, true atoms, and possible atoms
-              :- rule(disjunction(H),B), true(B), not atom_tuple(H,_).
+              :- rule(disjunction(H),B), poss(B), not atom_tuple(H,_).
 true(atom(A)) :- rule(disjunction(H),B), true(B),     atom_tuple(H,A).
 poss(atom(A)) :- rule(disjunction(H),B), poss(B),     atom_tuple(H,A).
-
-% forbid possible constraints (with _constraints=1)
-:- rule(disjunction(H),B), poss(B), not atom_tuple(H,_), _constraints=1.
 
 
 %
 % Knowledge
 %
-true(atom(A)) :- knowledge(true, A,B),     true(atom(L)) : literal_tuple(B,L).
-true(atom(A)) :- knowledge(false,A,B), not poss(atom(L)) , literal_tuple(B,L).
-true(atom(A)) :- knowledge(false,A,o).
+true(atom(A)) :- kw(A,B),     true(atom(L)),     literal_tuple(B,L).
+true(atom(A)) :- kw(A,B),                    not literal_tuple(B,_).
+true(atom(A)) :- kw(A,B), not poss(atom(L)),     literal_tuple(B,L).
+true(atom(A)) :- kw(A,o).
 
 
 %
 % Display
 %
-
 #show assume(false(N)) : quant(forall,N,A), assume(A), not poss(atom(A)), not error(_,_).
 
