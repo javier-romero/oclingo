@@ -4,7 +4,6 @@ x :- not u.
 x :-     u.
 :- not sense, not kw(x).
 :-     sense,     kw(x).
-query.
 
 #show sense/0. #show a/0.
 

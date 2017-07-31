@@ -55,13 +55,13 @@ hide(kw(X))        :- output(kw(X),_).
 hide(knowledge(X)) :- output(knowledge(X),_).
 
 #show.
-#show T : output(T,B), true(normal(B)), not hide(T),                  not error(_,_).
-#show assume(true(N))  : quant(forall,N,A), assume(A), true(atom(A)), not error(_,_).
-#show assume(false(N)) : quant(forall,N,A), assume(A), fail(atom(A)), not error(_,_).
+#show T : output(T,B), true(normal(B)), not hide(T),                      not error.
+#show assume(true(N))  : quant(forall,N,A), assume(A),     true(atom(A)), not error.
+#show assume(false(N)) : quant(forall,N,A), assume(A), not true(atom(A)), not error.
 
 #show error/2.
 error((twice,Q),Name)    :- quant(Q,Name,A), quant(Q,Name,A2), A > A2.
 error((scc,Q),Name)      :- scc(C,A), quant(Q,Name,A).
 error((scc,knowledge),A) :- scc(C,A), knowledge(A).
 error(output,O)          :- output(O,B), 2 { literal_tuple(B,L) }.
-
+error :- error(_,_).

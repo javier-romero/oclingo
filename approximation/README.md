@@ -11,13 +11,7 @@ or
 $ clingo [files] extra.lp --output=reify | clingo - -Wno-atom-undefined meta.lp metaPoss.lp
 ```
 
-Use ``--opt-mode=optN --quiet=1`` to compute all approximations.
-
-The system returns an approximation of the input program proving atom ``query``.
-To avoid the need to prove this atom, add ``-c _query=0`` at the end of the call.
-
-The constraints of the input program cannot be proved true.
-To require them also to be proved false, add ``-c _constraints=1`` at the end of the call.
+Use ``--opt-mode=optN --quiet=1,0 0`` to compute all approximations.
 
 The system minimizes the assumptions on the universally quantified atoms.
 To avoid the use of assumptions, add ``-c _assumptions=0`` at the end of the call.
@@ -31,7 +25,7 @@ There are some special predicates:
 - ``exists/1``: domain predicate, defines the existentially quantified atoms
 - ``forall/1``: domain predicate, defines the universally quantified atoms
 - ``knowledge/1``: domain predicate, defines the atoms ``A`` for which ``kw(A)`` appears in the input program 
-- ``holds/1``, ``flag/0``, ``kw/2``, ``query/1``: used internally, should not appear in the input program
+- ``holds/1``, ``flag/0``, ``kw/1``: used internally, should not appear in the input program
 
 The special predicates are not shown at the output (even when ``#show``n).
 For printing them, one can write something like this:
@@ -83,7 +77,6 @@ x :- not u.
 x :-     u.
 :- not sense, not kw(x).
 :-     sense,     kw(x).
-query.
 
 #show sense/0. #show a/0.
 

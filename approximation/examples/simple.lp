@@ -1,6 +1,6 @@
 query :- a, b.
 query :- a, not b.
-
+:- not query.
 #show a/0. #show b/0.
 
 %q :- x.

@@ -9,7 +9,6 @@
 % facts are true
 true(atom(A)) :- fact(A).
 
-
 %
 % Nondeterministic Part
 %
@@ -26,9 +25,8 @@ true(atom(A)) :- fact(A).
 poss(atom(A)) :- quant(forall,_,A), not assume(A).
 
 % make choices
-#const _choices=1.
 { true(atom(A)) } :- choice_supp(A,B), true(B).
-true(atom(A))     :- choice_supp(A,B), true(B), poss(A).
+  true(atom(A))   :- choice_supp(A,B), true(B), poss(A).
 
 % A is possible if it is true
 poss(atom(A)) :- true(atom(A)).
@@ -61,10 +59,4 @@ true(atom(A)) :- kw(A,B),     true(atom(L)),     literal_tuple(B,L).
 true(atom(A)) :- kw(A,B),                    not literal_tuple(B,_).
 true(atom(A)) :- kw(A,B), not poss(atom(L)),     literal_tuple(B,L).
 true(atom(A)) :- kw(A,o).
-
-
-%
-% Display
-%
-#show assume(false(N)) : quant(forall,N,A), assume(A), not poss(atom(A)), not error(_,_).
 
